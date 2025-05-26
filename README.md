@@ -24,3 +24,5 @@ Backend: Python, Flask
 Database:	MySQL                 
 Frontend:	HTML, CSS, JavaScript                            
 Architecture:	Full-stack web application                                    
+
+DEMO LINK: https://drive.google.com/file/d/11hEXuUP7nxc__7x1aT6hG-IcdI67YBjE/view?usp=sharing
