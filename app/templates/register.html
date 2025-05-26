@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            text-align: center;
+            color: #4a5568;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        /* Navigation Styles */
+        nav {
+            background: rgba(74, 85, 104, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Container Styles */
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            min-height: calc(100vh - 200px);
+            justify-content: center;
+        }
+
+        /* Back Button */
+        .back-button {
+            background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(108, 117, 125, 0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            max-width: 200px;
+            align-self: flex-start;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(108, 117, 125, 0.5);
+        }
+
+        /* Error Messages */
+        .error-message {
+            background: rgba(248, 215, 218, 0.95);
+            color: #721c24;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(245, 198, 203, 0.5);
+            text-align: center;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Register Section */
+        .register-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .register-section h2 {
+            color: #4a5568;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-text {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Form Styles */
+        .register-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .register-form input[type="text"],
+        .register-form input[type="password"],
+        .register-form input[type="email"] {
+            width: 100%;
+            padding: 1.25rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.3s ease;
+            outline: none;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .register-form input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .register-form input::placeholder {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .register-form input[type="submit"] {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.25rem 2rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+        }
+
+        .register-form input[type="submit"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .register-form input[type="submit"]:active {
+            transform: translateY(-1px);
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.25rem;
+        }
+
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            background: #e2e8f0;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-bar.active {
+            background: #48bb78;
+        }
+
+        .strength-bar.medium {
+            background: #ed8936;
+        }
+
+        .strength-bar.weak {
+            background: #f56565;
+        }
+
+        .strength-text {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            color: #718096;
+        }
+
+        /* Additional Links */
+        .auth-links {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .auth-links p {
+            color: #718096;
+            margin-bottom: 1rem;
+        }
+
+        .auth-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .auth-links a:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(74, 85, 104, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                gap: 1.5rem;
+            }
+
+            .register-section {
+                padding: 2rem 1.5rem;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .register-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .register-section h2 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .loading input[type="submit"] {
+            background: linear-gradient(135deg, #a0aec0 0%, #718096 100%);
+        }
+
+        .form-hint {
+            color: #718096;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Input Focus Enhancement */
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 1.2rem;
+        }
+
+        .input-with-icon {
+            padding-left: 3rem;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(209, 250, 229, 0.95);
+            color: #065f46;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(167, 243, 208, 0.5);
+            text-align: center;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>📝 Join Connectify</h1>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="/">🏠 Home</a></li>
+            <li><a href="/login">🔐 Login</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <a href="/" class="back-button">← Back to Home</a>
+        
+        <!-- Error Message Display (if needed) -->
+        {% if error %}
+            <div class="error-message">
+                ❌ {{ error }}
+            </div>
+        {% endif %}
+
+        <!-- Success Message Display (if needed) -->
+        {% if success %}
+            <div class="success-message">
+                ✅ {{ success }}
+            </div>
+        {% endif %}
+
+        <div class="register-section">
+            <h2>🌟 Create Your Account</h2>
+            <p class="welcome-text">Join our community and start connecting with others!</p>
+            
+            <form action="/register" method="post" class="register-form" id="registerForm">
+                <div class="form-group">
+                    <label class="form-label" for="username">
+                        👤 Username
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input 
+                            type="text" 
+                            id="username"
+                            name="username" 
+                            placeholder="Choose a unique username" 
+                            class="input-with-icon"
+                            required
+                            autocomplete="username"
+                            minlength="3"
+                            maxlength="20"
+                            pattern="[a-zA-Z0-9_]+"
+                            title="Username can only contain letters, numbers, and underscores"
+                        >
+                    </div>
+                    <div class="form-hint">💡 Choose a username that represents you (3-20 characters, letters, numbers, and underscores only)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">
+                        📧 Email Address
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📧</span>
+                        <input 
+                            type="email" 
+                            id="email"
+                            name="email" 
+                            placeholder="Enter your email address" 
+                            class="input-with-icon"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    <div class="form-hint">✉️ We'll use this to keep you updated</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">
+                        🔒 Password
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+                        <input 
+                            type="password" 
+                            id="password"
+                            name="password" 
+                            placeholder="Create a strong password" 
+                            class="input-with-icon"
+                            required
+                            autocomplete="new-password"
+                            minlength="6"
+                            oninput="checkPasswordStrength(this.value)"
+                        >
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                        <div class="strength-bar"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText">Password strength will be shown here</div>
+                    <div class="form-hint">🔐 Use at least 6 characters with a mix of letters, numbers, and symbols</div>
+                </div>
+                
+                <input type="submit" value="🚀 Create Account">
+            </form>
+
+            <div class="auth-links">
+                <p>Already have an account?</p>
+                <a href="/login">Sign In Instead →</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>&copy; 2024 Connectify App - Connecting Communities</p>
+    </footer>
+
+    <script>
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            const strengthBars = document.querySelectorAll('.strength-bar');
+            const strengthText = document.getElementById('strengthText');
+            
+            // Reset all bars
+            strengthBars.forEach(bar => {
+                bar.classList.remove('active', 'medium', 'weak');
+            });
+            
+            if (password.length === 0) {
+                strengthText.textContent = 'Password strength will be shown here';
+                strengthText.style.color = '#718096';
+                return;
+            }
+            
+            let strength = 0;
+            let feedback = [];
+            
+            // Length checks
+            if (password.length >= 6) {
+                strength++;
+                feedback.push('✓ Good length');
+            } else {
+                feedback.push('✗ Too short');
+            }
+            
+            if (password.length >= 8) {
+                strength++;
+            }
+            
+            // Character variety checks
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) {
+                strength++;
+                feedback.push('✓ Mixed case');
+            } else if (/[a-z]/.test(password) || /[A-Z]/.test(password)) {
+                feedback.push('~ Add mixed case');
+            } else {
+                feedback.push('✗ Add letters');
+            }
+            
+            if (/\d/.test(password)) {
+                strength++;
+                feedback.push('✓ Has numbers');
+            } else {
+                feedback.push('~ Add numbers');
+            }
+            
+            if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+                strength++;
+                feedback.push('✓ Has symbols');
+            } else {
+                feedback.push('~ Add symbols');
+            }
+            
+            // Apply strength visualization
+            let strengthLevel = 'weak';
+            let strengthMessage = 'Weak';
+            let color = '#f56565';
+            
+            if (strength >= 4) {
+                strengthLevel = 'active';
+                strengthMessage = 'Strong';
+                color = '#48bb78';
+            } else if (strength >= 2) {
+                strengthLevel = 'medium';
+                strengthMessage = 'Medium';
+                color = '#ed8936';
+            }
+            
+            // Update strength bars
+            for (let i = 0; i < Math.min(strength, 4); i++) {
+                strengthBars[i].classList.add(strengthLevel);
+            }
+            
+            // Update strength text
+            strengthText.textContent = `${strengthMessage} - ${feedback.slice(0, 3).join(', ')}`;
+            strengthText.style.color = color;
+        }
+        
+        // Form submission handling
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const form = this;
+            const submitButton = form.querySelector('input[type="submit"]');
+            
+            // Add loading state
+            form.classList.add('loading');
+            submitButton.value = '⏳ Creating Account...';
+            
+            // Remove loading state after a delay (in case of errors)
+            setTimeout(() => {
+                if (form.classList.contains('loading')) {
+                    form.classList.remove('loading');
+                    submitButton.value = '🚀 Create Account';
+                }
+            }, 10000);
+        });
+        
+        // Real-time username validation
+        document.getElementById('username').addEventListener('input', function() {
+            const username = this.value;
+            const pattern = /^[a-zA-Z0-9_]+$/;
+            
+            if (username && !pattern.test(username)) {
+                this.setCustomValidity('Username can only contain letters, numbers, and underscores');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+        
+        // Enhanced form validation
+        document.getElementById('registerForm').addEventListener('input', function(e) {
+            const field = e.target;
+            
+            // Remove any previous custom validity
+            field.setCustomValidity('');
+            
+            // Add visual feedback for valid fields
+            if (field.checkValidity()) {
+                field.style.borderColor = '#48bb78';
+            } else {
+                field.style.borderColor = '#e2e8f0';
+            }
+        });
+        
+        // Add some interactivity to the form
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate form elements on load
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.opacity = '0';
+                group.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    group.style.transition = 'all 0.5s ease';
+                    group.style.opacity = '1';
+                    group.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+            
+            // Focus first input
+            document.getElementById('username').focus();
+        });
+    </script>
+</body>
+</html>
