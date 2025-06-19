@@ -13,8 +13,10 @@ def login():
         username = request.form['username']
         password = request.form['password']
         user = get_user(username)
-        if user and user[2] == password:  # Assuming password is at index 2
-            session['user_id'] = user[3]  # Assuming user_id is at index 3
+        
+        # user[2] is password, user[0] is id
+        if user and user[2] == password:
+            session['user_id'] = user[0]  # Correct index for user_id
             return redirect(url_for('profile'))
         else:
             return render_template('login.html', error=True)
